@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export class Shoebox extends Component {
+    
   handleAddToCart = async () => {
-    // console.log("Added to cart");
+    // console.log("Remove From cart");
     const uid = sessionStorage.getItem("userId");
     if (uid == null) {
       // router.push("/login");
@@ -14,7 +15,7 @@ export class Shoebox extends Component {
     }
     // router= useRouter();
 
-    const data = { shoeid: this.props.id, custid: uid, qty: 1,action:"add" };
+    const data = { shoeid: this.props.id, custid: uid, qty: 1,action:"remove" };
     const response = await fetch("/api/usercart", {
       method: "POST",
       headers: {
@@ -22,12 +23,14 @@ export class Shoebox extends Component {
       },
       body: JSON.stringify(data),
     });
-    if (response.ok) {
-      toast.success("Added to cart");
-    } else {
-      toast.error("Failed to add to cart");
-    }
     const res = await response.json(); //for msg
+    if (response.ok) {
+      toast.success(res.message);
+      window.location.reload();
+    } else {
+      toast.error("Failed to Remove from cart");
+    }
+    
   };
   render() {
     const {
@@ -43,10 +46,13 @@ export class Shoebox extends Component {
     } = this.props;
 
     return (
-      <div className="relative h-[58vh] mx-auto flex w-full flex-col overflow-hidden rounded-xl border  bg-white shadow-lg">
+      <div className="relative h-[58vh] mx-auto flex w-full flex-col  rounded-xl border  bg-white shadow-lg">
         {/* <a className="mx-3 mt-3 flex justify-center overflow-hidden rounded-xl" href="#"> */}
         <span className="absolute top-1 left-1  rounded-full bg-black px-2 text-center text-sm font-medium text-white  shadow-xl">
           {discper}% OFF
+        </span>
+        <span className="absolute -top-6 -right-6  rounded-full h-14 w-14 bg-custom-amber p-3 text-center text-xl font-medium text-black  shadow-xl border">
+          {qty}
         </span>
 
         <img
@@ -128,18 +134,17 @@ export class Shoebox extends Component {
               </span>
             </div>
             <span className="block text-md font-medium text-gray-700 dark:text-gray-300">
-              In Stock: {qty}
+              
             </span>
           </div>
 
-          <a
-            href="#"
+          <div
             className="flex mt-6 items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-custom-amber hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
             onClick={this.handleAddToCart}
           >
             {/* ... Insert cart SVG here */}
-            Add to cart
-          </a>
+            Remove from Cart
+          </div>
         </div>
       </div>
     );

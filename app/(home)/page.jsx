@@ -1,40 +1,48 @@
 "use client";
-import React from 'react'
-import { useState,useEffect } from 'react'
-import { Button } from '@/components/ui/button'
+import React from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import Shoebox from "@/components/shoebox";
 
-function page() {
-    const [shoeslist, setshoeslist] = useState([]);
-    useEffect(() => {
-        const fetchShoes = async () => {
-            const res = await fetch("/api/getshoes");
-            const {shoeslist} = await res.json();
-            setshoeslist(shoeslist);
-        };
-        fetchShoes();
-        console.log(shoeslist);
-    }, []);
+function Page() {
+  const [shoeslist, setshoeslist] = useState([]);
+  useEffect(() => {
+    const fetchShoes = async () => {
+      const res = await fetch("/api/getshoes");
+      const { shoeslist } = await res.json();
+      setshoeslist(shoeslist);
+    };
+    fetchShoes();
+    // console.log(shoeslist);
+  }, []);
 
   return (
     <div>
-        <div className=' mx-auto p-8 font-bold text-9xl tracking-wider'><p className='mx-auto w-fit '>STEP . IN .<span className='text-[#4A69E2]'> STYLE</span></p></div>
-        <div className='grid grid-cols-3 gap-8 mx-20'>
-            {shoeslist.map((shoe) => (
-                <div key={shoe.ShoeID} className=' p-4 rounded-3xl bg-slate-50'>
-                    <img src={"/Rectangle 8.png"} alt={shoe.name} className='w-1/3 h-24 object-cover rounded-3xl'/>
-                    <div className='text-center font-bold text-lg'>{shoe.ShoeName}</div>
-                    <div className='text-center  text-lg'>{shoe.ShoeType}</div>
-                    <div className='text-center text-lg'>{shoe.MarkedPrice}</div>
-                    <div className='text-center text-lg'>{shoe.NumberOfItems}</div>
-                     <Button className=" bg-[#4A69E2]">Add to cart</Button>
-                </div>
-            ))}
+      <div className=" font-bold  tracking-wider h-[80vh] flex items-center text-[20vh] bg-neutral-50 rounded-xl mx-4">
+        <p className="mx-auto w-fit "style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+         <span className="text-custom-blue">STEP </span> .  IN  . <span className="text-custom-amber"> STYLE</span>
+        </p>
+      </div>
+      <div className="mx-28 grid grid-cols-3 gap-x-14 gap-y-10 mt-16 mb-40">
+        {shoeslist.map((shoe) => (
+            <Shoebox
+                key={shoe.ShoeID}
+                id={shoe.ShoeID}
+                name={shoe.ShoeName}
+                type={shoe.ShoeType}
+                size={shoe.Size}
+                company={shoe.ShoeCompany}
+                priceafdisc={shoe.PriceAfterDiscount}
+                discper={shoe.DiscountPercentage}
+                markedprice={shoe.MarkedPrice}
+                qty={shoe.NumberOfItems}
+            />
 
-            </div>
-       
-            
+      
+        ))}
+      </div>
     </div>
-  )
+  );
 }
 
-export default page
+export default Page;

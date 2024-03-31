@@ -1,19 +1,27 @@
 // api/login.js
 import { query } from "@/lib/db";
 import { NextResponse } from "next/server";
+// import { SessionStore } from "next-auth/core/lib/cookie";
 
 export async function POST(req, res) {
     try {
+        
         const { email, password } = await req.json();
 
-        // Perform authentication logic here, such as querying the database to verify credentials
+       
         const userRes = await query({
             query: "SELECT * FROM Customer WHERE Email = ? AND CustomerPassword = ?;",
             values: [email, password],
         });
+       
+        const customerID = userRes[0].CustomerID;
+        
+       
+        
+
 
         if (userRes.length === 1) {
-            return NextResponse.json({ message: "Login successful" }, { status: 200 });
+            return NextResponse.json({ message: "Login successful",userId:customerID }, { status: 200 });
         } else {
             return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
         }

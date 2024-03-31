@@ -18,6 +18,7 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
 
   const showPassword = () => {
@@ -39,12 +40,16 @@ const LoginForm = () => {
         body: JSON.stringify(data),
       });
       const res= await response.json();
+      // console.log(res);
    
     
 
       if (response.status===200) {
-        router.push("/products");
+        router.push("/");
         toast.success("Logged in successfully");
+        reset();
+      
+        sessionStorage.setItem("userId",(res.userId));
         router.refresh();
       } else {
         toast.error(res.message);
@@ -52,7 +57,7 @@ const LoginForm = () => {
       setSubmitting(false);
     } catch (error) {
       toast.error("Error logging in");
-      console.log(error);
+      // console.log(error);
       setSubmitting(false);
     } finally {
       setSubmitting(false);
@@ -61,15 +66,16 @@ const LoginForm = () => {
 
   return (
     <>
+    {/* mx-auto p-8 font-bold text-9xl tracking-wider */}
     
 
-      <div className="border-[1px] px-10 py-5  max-w-md mx-auto dark:bg-gray-800 dark:border-gray-700 justify-center align-middle rounded-3xl mt-20">
-        <h1 className="text-2xl font-bold text-center">Login</h1>
+      <div className="border-[1px] px-10 py-5  text-lg max-w-md mx-auto dark:bg-gray-800 dark:border-gray-700 justify-center align-middle rounded-3xl mt-10">
+        <h1 className="font-bold text-center text-6xl mb-10 tracking-wider">LogIn</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <Label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block text-lg font-medium text-gray-700 dark:text-gray-300"
             >
               Email
             </Label>
@@ -98,7 +104,7 @@ const LoginForm = () => {
           <div className="mb-6">
             <Label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block text-lg font-medium text-gray-700 dark:text-gray-300"
             >
               Password
             </Label>

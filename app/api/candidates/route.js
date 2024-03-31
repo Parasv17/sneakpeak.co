@@ -7,7 +7,7 @@ export async function GET(){
             query: "SELECT * FROM Customer",
             values: [],
           });
-          console.log(candidates);
+          // console.log(candidates);
         //   res.status(200).json({ cands:candidates });
           return NextResponse.json({ status: 200,cands: candidates });
         
