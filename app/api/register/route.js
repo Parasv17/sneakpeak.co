@@ -8,10 +8,16 @@ export async function POST(req, res) {
         const { name, email, password, phoneNumber, houseNumber, locality, streetApartment, pincode, dob } = await req.json();
 
         // Splitting full name into first, middle, and last names
+        let firstName = "";
+        let middleName = "";
+        let lastName = "";
+
         const nameParts = name.trim().split(" ");
-        const firstName = nameParts.shift();
-        const lastName = nameParts.pop();
-        const middleName = nameParts.join(" ");
+        if (nameParts.length > 1) {
+            firstName = nameParts.shift();
+            lastName = nameParts.pop();
+            middleName = nameParts.join(" ");
+        }
 
         if (!email || !email.includes("@")) {
             return NextResponse.json({ message: "Invalid email" }, { status: 208 });

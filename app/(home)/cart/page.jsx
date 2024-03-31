@@ -6,8 +6,34 @@ import Shoebox from '@/components/cartshoebox';
 
 function Page() {
   const [cartlist, setcartlist] = useState([]);
+  const [total, settotal] = useState(0);
+  const [totalitems, settotalitems] = useState(0);
 
+  const Checkout = async() => {
+    const user= sessionStorage.getItem("userId");
+    const data= {userId:user};
+    if(totalitems===0){toast.error("Your Cart is empty");return;}
+    if(data.userId){
+      const res = await fetch("/api/buycart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if(res.ok){
+        toast.success("Cart bought successfully");  
+      }
+      else {
+        toast.error("Failed to buy cart");
+      }
+      window.location.reload();
+    }
+    else {
+      toast.error("Please login to view cart");
+    }
   
+  }
   useEffect(() => {
     const fetchCart = async () => {
       const user= sessionStorage.getItem("userId");
@@ -19,8 +45,10 @@ function Page() {
         },
         body: JSON.stringify(data),
       });
-      const { cartlist } = await res.json();
-      setcartlist(cartlist);}
+      const { cartlist,totval,totitems } = await res.json();
+      setcartlist(cartlist);
+      settotal(totval);
+      settotalitems(totitems);}
       else {
        toast.error("Please login to view cart");
       }
@@ -30,7 +58,7 @@ function Page() {
   }, []);
 
   return (
-    <>
+    <div className=''>
     <div className=' mx-auto p-8 font-bold text-9xl tracking-wider'>
     <p className='mx-auto w-fit ' style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
       {cartlist.length === 0 
@@ -47,10 +75,21 @@ function Page() {
         : <span>Items in your <span className='text-custom-blue'>CART</span></span>
       }
     </p> </div>
-    <div className='flex'>
+    <div className="w-[50%] flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-8 mx-auto my-10">
+  <h2 className="text-3xl font-bold text-black mb-4">Cart Summary</h2>
+  <p className="text-xl text-black">Total Items: <span className="font-bold">{totalitems}</span></p>
+  <p className="text-xl text-black">Total Value: <span className="font-bold">${total}</span></p>
+  <button
+    className="mt-6 bg-custom-blue text-white font-bold py-2 px-4 rounded hover: transition duration-300"
+    onClick={Checkout}
+  >
+    Buy Cart
+  </button>
+</div>
+    <div className='flex mt-8'>
 
     
-    <div className="mx-28 grid grid-cols-1 w-[25%] gap-x-14 gap-y-10 mt-6">
+    <div className="mx-12 grid grid-cols-4  gap-x-14 gap-y-10 mt-6">
         {cartlist.map((shoe) => (
           <Shoebox
           key={shoe.ShoeID}
@@ -68,11 +107,12 @@ function Page() {
           
           ))}
       </div>
+      
+{/* show cart total , total number of item and buy cart button in this div */}
 
-      {/* <div> cart total</div> */}
           </div>
    
-    </>
+    </div>
     
 
   )

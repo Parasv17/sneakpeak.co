@@ -15,7 +15,18 @@ export async function POST(req, res) {
             values: [userId],
         });
         // console.log(userRes);
-        return NextResponse.json({cartlist:userRes}, { status: 200 });
+        let totalValue = 0;
+        let totalItems = 0;
+
+        // Calculate total cart value and total number of items
+        userRes.forEach(item => {
+            totalValue += item.PriceAfterDiscount * item.Quantity;
+            totalItems += item.Quantity;
+        });
+        // console.log("totalValue",totalValue);
+        // console.log("totalItems",totalItems);
+
+        return NextResponse.json({cartlist:userRes,totval:totalValue,totitems: totalItems}, { status: 200 });
 
         
     } catch (error) {

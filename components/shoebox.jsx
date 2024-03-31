@@ -132,14 +132,13 @@ export class Shoebox extends Component {
             </span>
           </div>
 
-          <a
-            href="#"
-            className="flex mt-6 items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-custom-amber hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+          <div
+            className="flex mt-6 items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-custom-amber hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:cursor-pointer"
             onClick={this.handleAddToCart}
           >
             {/* ... Insert cart SVG here */}
             Add to cart
-          </a>
+          </div>
         </div>
       </div>
     );
