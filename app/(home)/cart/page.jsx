@@ -86,10 +86,11 @@ function Page() {
     Buy Cart
   </button>
 </div>
-    <div className='flex mt-8'>
+    {/* <div className='flex mt-8 justify-center'> */}
 
     
-    <div className="mx-12 grid grid-cols-4  gap-x-14 gap-y-10 mt-6">
+    {/* <div className="mx-12 grid grid-cols-3  gap-x-12 gap-y-10 mt-6"> */}
+    <div className="mx-28 grid grid-cols-3 2xl:grid-cols-4 gap-x-14 gap-y-10 mt-16 mb-40">
         {cartlist.map((shoe) => (
           <Shoebox
           key={shoe.ShoeID}
@@ -106,7 +107,7 @@ function Page() {
           
           
           ))}
-      </div>
+      {/* </div> */}
       
 {/* show cart total , total number of item and buy cart button in this div */}
 

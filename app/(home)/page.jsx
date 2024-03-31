@@ -23,7 +23,7 @@ function Page() {
          <span className="text-custom-blue">STEP </span> .  IN  . <span className="text-custom-amber"> STYLE</span>
         </p>
       </div>
-      <div className="mx-28 grid grid-cols-3 gap-x-14 gap-y-10 mt-16 mb-40">
+      <div className="mx-28 grid grid-cols-3 2xl:grid-cols-4 gap-x-14 gap-y-10 mt-16 mb-40">
         {shoeslist.map((shoe) => (
             <Shoebox
                 key={shoe.ShoeID}

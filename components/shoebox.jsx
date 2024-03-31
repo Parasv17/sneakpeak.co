@@ -43,14 +43,14 @@ export class Shoebox extends Component {
     } = this.props;
 
     return (
-      <div className="relative h-[58vh] mx-auto flex w-full flex-col overflow-hidden rounded-xl border  bg-white shadow-lg">
+      <div className="relative h-[58vh]  max-h-[400px] mx-auto flex w-[90%] flex-col overflow-hidden rounded-xl border  bg-white shadow-lg">
         {/* <a className="mx-3 mt-3 flex justify-center overflow-hidden rounded-xl" href="#"> */}
         <span className="absolute top-1 left-1  rounded-full bg-black px-2 text-center text-sm font-medium text-white  shadow-xl">
           {discper}% OFF
         </span>
 
         <img
-          className=" rounded-xl shadow-md h-[40%] object-cover"
+          className=" rounded-xl shadow-md h-[40%] object-contain"
           src={"/Rectangle 8.png"}
           alt={name}
         />
