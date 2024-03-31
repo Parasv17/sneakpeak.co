@@ -14,13 +14,10 @@ export async function POST(req, res) {
             values: [email, password],
         });
        
-        const customerID = userRes[0].CustomerID;
         
-       
         
-
-
         if (userRes.length === 1) {
+            const customerID = userRes[0].CustomerID;
             return NextResponse.json({ message: "Login successful",userId:customerID }, { status: 200 });
         } else {
             return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
