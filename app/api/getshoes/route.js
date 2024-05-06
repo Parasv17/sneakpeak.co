@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, res) {
     try {
     const allshoes = await query({
-            query: "SELECT * FROM Shoe",
+            query: "SELECT * FROM Shoe  WHERE NumberOfItems > 0",
             values: [],
           });
         //   console.log(allshoes);

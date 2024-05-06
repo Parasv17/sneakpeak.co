@@ -44,6 +44,8 @@ export class Shoebox extends Component {
       markedprice,
       qty,
     } = this.props;
+    const  fpriceafdisc = parseFloat(priceafdisc).toFixed(2);
+    const  fmarkedprice = parseFloat(markedprice).toFixed(2);
 
     return (
       <div className="relative h-[58vh]  max-h-[400px] mx-auto flex w-[90%] flex-col  rounded-xl border  bg-white shadow-lg mb-10">
@@ -68,11 +70,11 @@ export class Shoebox extends Component {
           </div>
           <div className="flex justify-between items-center mt-4">
             <div>
-              <span className="text-3xl font-bold text-slate-900">
-                ${priceafdisc}
+              <span className="text-3xl font-bold text-slate-900 overflow-hidden">
+                ${fpriceafdisc}
               </span>
               <span className="text-sm text-slate-900 line-through">
-                ${markedprice}
+                ${fmarkedprice}
               </span>
             </div>
             <div>

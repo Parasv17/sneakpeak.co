@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function GET(){
     try {
-        const candidates = await query({
+        const customers = await query({
             query: "SELECT * FROM Customer",
             values: [],
           });
-          // console.log(candidates);
+          console.log(customers);
         //   res.status(200).json({ cands:candidates });
-          return NextResponse.json({ status: 200,cands: candidates });
+          return NextResponse.json({ status: 200,custs: customers });
         
     } catch (error) {
         console.error(error);

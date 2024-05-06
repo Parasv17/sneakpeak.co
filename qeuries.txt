@@ -1,0 +1,274 @@
+final queries:
+
+1. START TRANSACTION;
+
+UPDATE Shoe
+SET NumberOfItems = NumberOfItems - (
+    SELECT Quantity
+    FROM Cart
+    WHERE CustomerID = ? AND ShoeID = Shoe.ShoeID
+)
+WHERE ShoeID IN (
+    SELECT ShoeID
+    FROM Cart
+    WHERE CustomerID = 1
+);
+
+INSERT INTO Orders (CustomerID, OrderDate, TotalAmount)
+VALUES (?, CURDATE(),
+    (SELECT SUM(s.MarkedPrice * c.Quantity)
+     FROM Cart c
+     JOIN Shoe s ON c.ShoeID = s.ShoeID
+     WHERE c.CustomerID = ?)
+);
+
+INSERT INTO OrderItems (OrderID, ShoeID, Quantity, Price)
+SELECT (SELECT MAX(OrderID) FROM Orders), c.ShoeID, c.Quantity, s.MarkedPrice
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = ?;
+
+INSERT INTO Sold (ShoeID, VendorID, Price, Quantity, Date)
+SELECT c.ShoeID, s.ShoesVendorID, s.MarkedPrice, c.Quantity, CURDATE()
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = ?;
+
+DELETE FROM Cart
+WHERE CustomerID = ?;
+
+COMMIT;
+
+
+
+
+
+
+
+2. START TRANSACTION;
+INSERT INTO lists (ShoeID, VendorID, Quantity)
+VALUES (1, 1, 10);
+
+UPDATE shoe
+SET NumberOfItems = NumberOfItems + 10
+WHERE ShoeID = 1;
+
+UPDATE vendor
+SET StockAdded = StockAdded + 10
+WHERE VendorID = 1;
+
+COMMIT;
+
+
+
+
+
+
+
+3. START TRANSACTION;
+UPDATE Shoe SET PriceAfterDiscount = 50, DiscountPercentage = 50 WHERE ShoeID = 1;
+COMMIT;
+
+
+
+
+
+
+
+4. START TRANSACTION;
+UPDATE Shoe
+SET NumberOfItems = 0
+WHERE ShoeID IN (
+    SELECT ShoeID
+    FROM Cart
+    WHERE CustomerID = 1
+);
+
+INSERT INTO Orders (CustomerID, OrderDate, TotalAmount)
+VALUES (1, CURDATE(),
+    (SELECT SUM(s.MarkedPrice * c.Quantity)
+     FROM Cart c
+     JOIN Shoe s ON c.ShoeID = s.ShoeID
+     WHERE c.CustomerID = 1)
+);
+
+INSERT INTO OrderItems (OrderID, ShoeID, Quantity, Price)
+SELECT (SELECT MAX(OrderID) FROM Orders), c.ShoeID, c.Quantity, s.MarkedPrice
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+INSERT INTO Sold (ShoeID, VendorID, Price, Quantity, Date)
+SELECT c.ShoeID, s.ShoesVendorID, s.MarkedPrice, c.Quantity, CURDATE()
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+DELETE FROM Cart
+WHERE CustomerID = 1;
+
+COMMIT;
+
+
+
+
+
+Conflicting:
+
+1. start transaction;
+insert into cart(customerid,shoeid,quantity) values (1,2,1);
+commit;
+
+
+START TRANSACTION;
+UPDATE Shoe
+SET NumberOfItems = NumberOfItems - (
+    SELECT Quantity
+    FROM lists
+    WHERE ShoeID = 8 AND VendorID = 2
+)
+WHERE ShoeID = 8;
+
+UPDATE Vendor
+SET StockAdded = StockAdded - (
+    SELECT Quantity
+    FROM lists
+    WHERE ShoeID = 8 AND VendorID = 2
+)
+WHERE VendorID = 2;
+
+DELETE FROM Cart
+WHERE ShoeID = 8;
+
+DELETE FROM lists
+WHERE ShoeID = 8 AND VendorID = 2;
+COMMIT;
+
+
+
+START TRANSACTION;
+UPDATE Shoe
+SET NumberOfItems = NumberOfItems - (
+    SELECT Quantity
+    FROM Cart
+    WHERE CustomerID = 1 AND ShoeID = Shoe.ShoeID
+)
+WHERE ShoeID IN (
+    SELECT ShoeID
+    FROM Cart
+    WHERE CustomerID = 1
+);
+
+INSERT INTO Orders (CustomerID, OrderDate, TotalAmount)
+VALUES (1, CURDATE(),
+    (SELECT SUM(s.MarkedPrice * c.Quantity)
+     FROM Cart c
+     JOIN Shoe s ON c.ShoeID = s.ShoeID
+     WHERE c.CustomerID = 1)
+);
+
+INSERT INTO OrderItems (OrderID, ShoeID, Quantity, Price)
+SELECT (SELECT MAX(OrderID) FROM Orders), c.ShoeID, c.Quantity, s.MarkedPrice
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+INSERT INTO Sold (ShoeID, VendorID, Price, Quantity, Date)
+SELECT c.ShoeID, s.ShoesVendorID, s.MarkedPrice, c.Quantity, CURDATE()
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+DELETE FROM Cart
+WHERE CustomerID = 1;
+
+ROLLBACK;
+
+
+
+
+
+2. 
+start transaction;
+update shoe
+set numberofitems = 1
+where shoeid = 1;
+commit;
+
+start transaction;
+insert into cart (customerid,shoeid,quantity) values(1,1,1);
+commit;
+
+start transaction;
+insert into cart (customerid,shoeid,quantity) values(2,1,1);
+commit;
+
+START TRANSACTION;
+UPDATE Shoe
+SET NumberOfItems = 0
+WHERE ShoeID IN (
+    SELECT ShoeID
+    FROM Cart
+    WHERE CustomerID = 1
+);
+
+INSERT INTO Orders (CustomerID, OrderDate, TotalAmount)
+VALUES (1, CURDATE(),
+    (SELECT SUM(s.MarkedPrice * c.Quantity)
+     FROM Cart c
+     JOIN Shoe s ON c.ShoeID = s.ShoeID
+     WHERE c.CustomerID = 1)
+);
+
+INSERT INTO OrderItems (OrderID, ShoeID, Quantity, Price)
+SELECT (SELECT MAX(OrderID) FROM Orders), c.ShoeID, c.Quantity, s.MarkedPrice
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+INSERT INTO Sold (ShoeID, VendorID, Price, Quantity, Date)
+SELECT c.ShoeID, s.ShoesVendorID, s.MarkedPrice, c.Quantity, CURDATE()
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 1;
+
+DELETE FROM Cart
+WHERE CustomerID = 1;
+
+COMMIT;
+
+START TRANSACTION;
+UPDATE Shoe
+SET NumberOfItems = 0
+WHERE ShoeID IN (
+    SELECT ShoeID
+    FROM Cart
+    WHERE CustomerID = 2
+);
+
+INSERT INTO Orders (CustomerID, OrderDate, TotalAmount)
+VALUES (2, CURDATE(),
+    (SELECT SUM(s.MarkedPrice * c.Quantity)
+     FROM Cart c
+     JOIN Shoe s ON c.ShoeID = s.ShoeID
+     WHERE c.CustomerID = 2)
+);
+
+INSERT INTO OrderItems (OrderID, ShoeID, Quantity, Price)
+SELECT (SELECT MAX(OrderID) FROM Orders), c.ShoeID, c.Quantity, s.MarkedPrice
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 2;
+
+INSERT INTO Sold (ShoeID, VendorID, Price, Quantity, Date)
+SELECT c.ShoeID, s.ShoesVendorID, s.MarkedPrice, c.Quantity, CURDATE()
+FROM Cart c
+JOIN Shoe s ON c.ShoeID = s.ShoeID
+WHERE c.CustomerID = 2;
+
+DELETE FROM Cart
+WHERE CustomerID = 2;
+
+ROLLBACK;
+
+

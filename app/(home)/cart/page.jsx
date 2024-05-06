@@ -27,7 +27,7 @@ function Page() {
       else {
         toast.error("Failed to buy cart");
       }
-      window.location.reload();
+      // window.location.reload();
     }
     else {
       toast.error("Please login to view cart");
