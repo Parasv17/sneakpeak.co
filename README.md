@@ -9,4 +9,4 @@ An E-Commerce Store for Shoes, made as part of Fundamentals of Database Manageme
 ## Explore Now!
 Find your perfect pair at [SneakPeak.co](https://sneakpeak-co.vercel.app/).
 
-#### Developed with ❤️ by [Paras](https://www.linkedin.com/in/paras-verma-116bb0212) & **Manit**
+
